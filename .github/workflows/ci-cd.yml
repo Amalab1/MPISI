@@ -1,0 +1,42 @@
+# .github/workflows/ci-cd.yml
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build with Maven
+        run: mvn clean compile
+
+      - name: Run tests with coverage
+        run: mvn test jacoco:report
+
+      - name: SonarCloud Scan
+        run: mvn sonar:sonar
+        env:
+          SONAR_TOKEN: b568e356ca9cff2c44d6d9958e9c83532ece6e6f
+
+      - name: Build Docker image
+        run: |
+          docker build -t votre-username/votre-app:latest .
+
+      - name: Push to Docker Hub
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+          docker push votre-username/votre-app:latest
