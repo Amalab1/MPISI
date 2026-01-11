@@ -1,2 +1,9 @@
-package com.example.projetmpisi.cucumber.config;public class CucumberSpringConfiguration {
+package com.example.projetmpisi.cucumber.config;
+
+import org.springframework.boot.test.context.SpringBootTest;
+import io.cucumber.spring.CucumberContextConfiguration;
+
+@CucumberContextConfiguration
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class CucumberSpringConfiguration {
 }

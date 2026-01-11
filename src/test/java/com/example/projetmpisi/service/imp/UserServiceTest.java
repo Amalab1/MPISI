@@ -1,75 +1,92 @@
 package com.example.projetmpisi.service.imp;
 
-
 import com.example.projetmpisi.entity.User;
 import com.example.projetmpisi.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import java.util.Optional;
-import java.util.List;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import org.mockito.Mockito;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
     @InjectMocks
     private UserService userService;
 
-    public UserServiceTest() {
-        MockitoAnnotations.openMocks(this);
-    }
-
     @Test
     void testSaveUser() {
-        User user = new User(1, "Bilel", "bilel@example.com");
-        when(userRepository.save(user)).thenReturn(user);
-        User saved = userService.saveUser(user);
-        assertEquals("Bilel", saved.getUsername());
-    }
+        User user = new User("john", "john@mail.com");
+        Mockito.when(userRepository.save(user)).thenReturn(user);
 
-    @Test
-    void testGetUserById() {
-        User user = new User(1, "Bilel", "bilel@example.com");
-        when(userRepository.findById(1)).thenReturn(Optional.of(user));
-        Optional<User> result = userService.getUserById(1);
-        assertTrue(result.isPresent());
-        assertEquals("bilel@example.com", result.get().getEmail());
+        User result = userService.saveUser(user);
+
+        assertNotNull(result);
+        assertEquals("john", result.getUsername());
     }
 
     @Test
     void testGetAllUsers() {
-        when(userRepository.findAll()).thenReturn(List.of(new User(1, "A", "a@a.com")));
-        List<User> users = userService.getAllUsers();
-        assertEquals(1, users.size());
+        Mockito.when(userRepository.findAll())
+                .thenReturn(Arrays.asList(
+                        new User("john", "john@mail.com"),
+                        new User("alex", "alex@mail.com")
+                ));
+
+        var list = userService.getAllUsers();
+
+        assertEquals(2, list.size());
+    }
+
+    @Test
+    void testGetUserById() {
+        User user = new User("john", "john@mail.com");
+        Mockito.when(userRepository.findById(1)).thenReturn(Optional.of(user));
+
+        Optional<User> result = userService.getUserById(1);
+
+        assertTrue(result.isPresent());
+        assertEquals("john", result.get().getUsername());
+    }
+
+    @Test
+    void testUpdateUser_whenExists() {
+        User user = new User("johnUpdated", "updated@mail.com");
+
+        Mockito.when(userRepository.existsById(1)).thenReturn(true);
+        Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
+
+        User result = userService.updateUser(1, user);
+
+        assertNotNull(result);
+        assertEquals(1, result.getId());
+        assertEquals("johnUpdated", result.getUsername());
+    }
+
+    @Test
+    void testUpdateUser_whenNotExists() {
+        User user = new User("john", "mail");
+
+        Mockito.when(userRepository.existsById(1)).thenReturn(false);
+
+        User result = userService.updateUser(1, user);
+
+        assertNull(result);
     }
 
     @Test
     void testDeleteUser() {
         userService.deleteUser(1);
-        verify(userRepository, times(1)).deleteById(1);
-    }
 
-    @Test
-    void saveUser() {
-    }
-
-    @Test
-    void getAllUsers() {
-    }
-
-    @Test
-    void getUserById() {
-    }
-
-    @Test
-    void updateUser() {
-    }
-
-    @Test
-    void deleteUser() {
+        Mockito.verify(userRepository, Mockito.times(1)).deleteById(1);
     }
 }

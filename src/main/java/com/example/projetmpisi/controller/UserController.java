@@ -17,8 +17,13 @@ public class UserController {
     private IUserService userService;
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        return ResponseEntity.ok(userService.saveUser(user));
+    public ResponseEntity<User> createUser(@RequestBody User userDTO) {
+        User user = new User();
+        user.setUsername(userDTO.getUsername());
+        user.setEmail(userDTO.getEmail());
+
+        User savedUser = userService.saveUser(user);
+        return ResponseEntity.status(201).body(savedUser);
     }
 
     @GetMapping

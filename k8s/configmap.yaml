@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  # CORRECTION : Utilisez un nom de clé simple
+  database.url: "jdbc:mysql://mysql:3306/projetmpisi_db"
+  # Note : j'ai remplacé "database-url" par "database.url" (avec un point)
+  # OU utilisez simplement "database_url"
+  log.level: "INFO"
