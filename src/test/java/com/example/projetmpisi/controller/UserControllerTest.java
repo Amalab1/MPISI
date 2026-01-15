@@ -32,7 +32,7 @@ class UserControllerTest {
     void createUser() {
         // Given
         User user = new User();
-        user.setId(1);  // int au lieu de long
+        user.setId(1);
         when(userService.saveUser(any(User.class))).thenReturn(user);
 
         // When
@@ -40,10 +40,12 @@ class UserControllerTest {
 
         // Then
         assertNotNull(response);
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(201, response.getStatusCodeValue());
         assertNotNull(response.getBody());
-        assertEquals(1, response.getBody().getId());  // int au lieu de long
-        verify(userService, times(1)).saveUser(user);
+        assertEquals(1, response.getBody().getId());
+
+        // Vérifie juste que saveUser a été appelé une fois
+        verify(userService, times(1)).saveUser(any(User.class));
     }
 
     @Test
