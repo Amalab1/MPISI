@@ -1,8 +1,11 @@
-- name: Build, Test & SonarCloud Analysis
-  run: mvn clean verify sonar:sonar \
-    -Dsonar.projectKey=Amalab1_MPISI \
-    -Dsonar.organization=amalab1-1 \
-    -Dsonar.host.url=https://sonarcloud.io \
-    -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+- name: Analyze with SonarCloud
+  uses: SonarSource/sonarcloud-github-action@4006f663ecaf1f8093e8e4abb9227f6041f52216
   env:
     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  with:
+    args: >
+      -Dsonar.projectKey=Amalab1_MPISI
+      -Dsonar.organization=amalab1-1
+      -Dsonar.host.url=https://sonarcloud.io
+      -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+    projectBaseDir: .
