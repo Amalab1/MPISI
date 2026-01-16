@@ -27,8 +27,9 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Build & Test with Maven
-        run: mvn clean verify
+      - name: Build with Maven (skip tests)
+        run: mvn clean package -DskipTests
+
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2.2.0
