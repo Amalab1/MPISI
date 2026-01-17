@@ -27,6 +27,9 @@ jobs:
           java-version: 17
           cache: maven
 
+      - name: Make mvnw executable
+        run: chmod +x ./mvnw
+
       - name: Build, Test & SonarCloud
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
