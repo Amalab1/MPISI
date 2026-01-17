@@ -8,7 +8,7 @@ on:
 env:
   SONAR_HOST_URL: https://sonarcloud.io
   SONAR_ORG: amalab1-1
-  SONAR_PROJECT_KEY: projetMPISI
+  SONAR_PROJECT_KEY: projetMPISI-local
 
 jobs:
   ci:
