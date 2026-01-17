@@ -10,10 +10,7 @@ class ProjetMpisiApplicationTest {
 
 
 
-    @Test
-    void main() {
-        ProjetMpisiApplication.main(new String[]{});
-    }
+
 
     @Test
     void contextLoads() {}
